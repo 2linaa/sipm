@@ -59,14 +59,19 @@
             <span class="form-checkbox-label"><?= lang('Auth.rememberMe') ?></span>
           </label>
         <?php endif; ?>
+        
 
         <button type="submit" class="form-btn primary-default-btn transparent-btn"><?= lang('Auth.loginAction') ?></button>
         <?php if ($config->allowRegistration) : ?>
           <p class="form-label"><a href="<?= url_to('register') ?>"><?= lang('Auth.needAnAccount') ?></a></p>
         <?php endif; ?>
-        <?php if ($config->activeResetter): ?>
+        <?php if ($config->activeResetter) : ?>
           <p class="form-label"><a href="<?= url_to('forgot') ?>"><?= lang('Auth.forgotYourPassword') ?></a></p>
         <?php endif; ?>
+        <?php if ($config->activeResetter): ?>
+          <p class="form-label"><a href="<?= url_to('forgot') ?>">lupa<?= lang('Auth.forgotYourPassword') ?></a></p>
+        <?php endif; ?>
+        
       </form>
 
     </article>

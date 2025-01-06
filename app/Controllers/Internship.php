@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\InternshipModel;
+use Twilio\Rest\Client;
+
 
 class Internship extends BaseController
 {
@@ -58,9 +60,44 @@ class Internship extends BaseController
 
         $model->save($data);
 
+        // Kirim Notifikasi WhatsApp
+        $this->sendWhatsAppNotification($data);
+
         session()->setFlashdata('message', 'Pengajuan magang berhasil! Kode Pendaftaran: ' . $kodePendaftaran);
         return redirect()->to('/home');
     }
+
+    private function sendWhatsAppNotification($data)
+    {
+        $sid = 'ACc491468cd7072a2e696aafc69045c2d6'; // Ganti dengan SID akun Twilio Anda
+        $token = '57da8df6de70a1c7882b633fadc60b87'; // Ganti dengan token API Twilio Anda
+        $whatsappFrom = 'whatsapp:+14155238886'; // Nomor WA yang diverifikasi Twilio
+        $whatsappTo = 'whatsapp:+6287863898658'; // Nomor tujuan (admin)
+
+        $message = "Pengajuan Magang Baru:\n"
+            . "Nama: {$data['nama']}\n"
+            . "No Telepon: {$data['no_telepon']}\n"
+            . "Email: {$data['email']}\n"
+            . "Instansi: {$data['instansi']}\n"
+            . "Tanggal Mulai: {$data['mulai']}\n"
+            . "Tanggal Selesai: {$data['selesai']}\n"
+            . "Kode Pendaftaran: {$data['kode_pendaftaran']}";
+
+        $client = new \Twilio\Rest\Client($sid, $token);
+
+        try {
+            $client->messages->create(
+                $whatsappTo,
+                [
+                    'from' => $whatsappFrom,
+                    'body' => $message,
+                ]
+            );
+        } catch (\Exception $e) {
+            log_message('error', 'Error sending WhatsApp: ' . $e->getMessage());
+        }
+    }
+
 
     public function check_status()
     {
