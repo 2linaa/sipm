@@ -69,8 +69,9 @@ class Internship extends BaseController
 
     private function sendWhatsAppNotification($data)
     {
-        $sid = 'ACc491468cd7072a2e696aafc69045c2d6'; // Ganti dengan SID akun Twilio Anda
-        $token = '57da8df6de70a1c7882b633fadc60b87'; // Ganti dengan token API Twilio Anda
+        $sid = getenv('TWILIO_ACCOUNT_SID');
+        $token = getenv('TWILIO_AUTH_TOKEN');
+        
         $whatsappFrom = 'whatsapp:+14155238886'; // Nomor WA yang diverifikasi Twilio
         $whatsappTo = 'whatsapp:+6287863898658'; // Nomor tujuan (admin)
 
